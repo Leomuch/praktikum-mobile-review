@@ -1,20 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:review6/dark_mode.dart';
 
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
-
-  @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends State<SettingsScreen> {
-  bool isDarkModeActive = false;
-
-  void changeTheme(bool value) {
-    setState(() {
-      isDarkModeActive = value;
-    });
-  }
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +16,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           ListTile(
             leading: Icon(
-              isDarkModeActive ? Icons.dark_mode : Icons.light_mode,
+              Provider.of<ThemeModeData>(context).isDarkModeActive
+                  ? Icons.dark_mode
+                  : Icons.light_mode,
             ),
             title: Text("Title"),
             trailing: Switch(
-              value: isDarkModeActive,
+              value: Provider.of<ThemeModeData>(context).isDarkModeActive,
               onChanged: (bool value) {
-                changeTheme(value);
+                Provider.of<ThemeModeData>(context, listen: false).changeTheme(
+                  value ? ThemeMode.dark : ThemeMode.light,
+                );
               },
             ),
             onTap: () {
-              changeTheme(!isDarkModeActive);
+              Provider.of<ThemeModeData>(context, listen: false).changeTheme(
+                Provider.of<ThemeModeData>(context, listen: false)
+                        .isDarkModeActive
+                    ? ThemeMode.light
+                    : ThemeMode.dark,
+              );
             },
           )
         ],
